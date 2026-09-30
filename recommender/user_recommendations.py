@@ -1,5 +1,7 @@
 import os
+
 import duckdb
+import pandas as pd
 from jinja2 import Template
 
 DATA_DIR = os.environ.get("BINGE_DATA", "data/binge")
@@ -28,7 +30,7 @@ con.execute(f"""
 """)
 
 target_user_id = 822109
-bayesian_weight = 25.0 
+bayesian_weight = 25.0
 
 sql_template = Template("""
 WITH GlobalStats AS (
@@ -58,7 +60,9 @@ UserMovies AS (
 JaccardSimilarity AS (
     SELECT
         r2.user_id AS similar_user,
-        COUNT(DISTINCT r1.movie_id) * 1.0 / NULLIF(COUNT(DISTINCT r1.movie_id) + COUNT(DISTINCT r2.movie_id) - COUNT(DISTINCT r1.movie_id), 0) AS jaccard_score
+        COUNT(DISTINCT r1.movie_id) * 1.0
+            / NULLIF(COUNT(DISTINCT r1.movie_id) + COUNT(DISTINCT r2.movie_id) - COUNT(DISTINCT r1.movie_id), 0)
+            AS jaccard_score
     FROM ratings r1
     JOIN ratings r2 ON r1.movie_id = r2.movie_id AND r1.user_id != r2.user_id
     WHERE r1.user_id = '{{ target_user }}'
@@ -112,7 +116,7 @@ result = con.execute(sql_query).fetchdf()
 
 result.to_csv("user_recommendations.csv", index=False)
 
-import pandas as pd
-pd.set_option('display.max_rows', None)  
-pd.set_option('display.max_columns', None)
+
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
 print(result)

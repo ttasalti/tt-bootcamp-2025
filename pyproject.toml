@@ -1,0 +1,18 @@
+[project]
+name = "tt-bootcamp-2025"
+version = "0.1.0"
+description = "Churn models and a DuckDB recommender from the Türk Telekom Big Data Camp 2025"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["common", "config"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,6 +1,6 @@
 import os
+
 import duckdb
-import pandas as pd
 from jinja2 import Template
 
 DATA_DIR = os.environ.get("BINGE_DATA", "data/binge")
@@ -41,7 +41,7 @@ movies_df = con.execute("""
     LIMIT 6
 """).fetchdf()
 
-movie_pairs = [(movies_df.iloc[i]['movie_id'], movies_df.iloc[i+1]['movie_id']) for i in range(0, 6, 2)]
+movie_pairs = [(movies_df.iloc[i]["movie_id"], movies_df.iloc[i + 1]["movie_id"]) for i in range(0, 6, 2)]
 
 sql_template = Template("""
 WITH GlobalMovieStats AS (
@@ -119,10 +119,10 @@ for movie_a, movie_b in movie_pairs:
     rendered_sql = sql_template.render(movie_a=movie_a, movie_b=movie_b)
     result = con.execute(rendered_sql).fetchdf()
 
-    movie_a_name = result['movie_a_name'][0]
-    movie_b_name = result['movie_b_name'][0]
-    kl_a_b = result['kl_divergence_a_b'][0]
-    kl_b_a = result['kl_divergence_b_a'][0]
+    movie_a_name = result["movie_a_name"][0]
+    movie_b_name = result["movie_b_name"][0]
+    kl_a_b = result["kl_divergence_a_b"][0]
+    kl_b_a = result["kl_divergence_b_a"][0]
 
     print(f"\n{movie_a_name} ({movie_a}) vs {movie_b_name} ({movie_b})")
 

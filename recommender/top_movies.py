@@ -1,4 +1,5 @@
 import os
+
 import duckdb
 from jinja2 import Template
 
@@ -26,7 +27,7 @@ con.execute(f"""
         IGNORE_ERRORS=TRUE
     );
 """)
-bayesian_weight = 5.0 
+bayesian_weight = 5.0
 
 sql_template = Template("""
 WITH GlobalStats AS (
